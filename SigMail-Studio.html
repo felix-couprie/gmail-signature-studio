@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Signature Table Builder — FR / EN</title>
+  <style>
+    :root{
+      --bg1:#f8fafc; --bg2:#f1f5f9; --card:#ffffff; --card2:#fefefe;
+      --border: rgba(0,0,0,.08);
+      --text:#0f172a; --muted:#64748b;
+      --accent:#8b5cf6;
+      --accent2:#06b6d4;
+      --shadow: 0 4px 20px rgba(0,0,0,.08);
+      --radius: 12px;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Helvetica, sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(139,92,246,.08), transparent 60%),
+        radial-gradient(900px 600px at 90% 20%, rgba(6,182,212,.06), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      padding: 22px;
+    }
+    .shell{ max-width: 1180px; margin: 0 auto; }
+    .topbar{
+      display:flex; gap:14px; align-items:center; justify-content:space-between;
+      margin-bottom: 14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+    }
+    .logo{
+      width: 42px; height: 42px; border-radius: 8px;
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo svg{
+      width: 24px;
+      height: 24px;
+    }
+    .titleBlock h1{ margin:0; font-size: 16px; letter-spacing:.2px; }
+    .titleBlock p{ margin:2px 0 0; color:var(--muted); font-size:12px; }
+    .langPills{
+      display:flex; gap:10px; align-items:center;
+      border:1px solid var(--border);
+      background: #ffffff;
+      border-radius: 999px;
+      padding: 6px;
+      box-shadow: var(--shadow);
+    }
+    .pill{
+      border:0; background:transparent; color:var(--muted);
+      padding: 8px 12px; border-radius: 999px; cursor:pointer;
+      font-size: 12px; font-weight: 650;
+    }
+    .pill.active{
+      color: white;
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      border: none;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 460px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .card{
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .cardHead{
+      padding: 14px 14px 10px;
+      background: linear-gradient(180deg, rgba(139,92,246,.03), transparent);
+      border-bottom: 1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .cardHead h2{ margin:0; font-size: 13px; letter-spacing:.2px; }
+    .badge{
+      font-size: 11px; color: var(--muted);
+      padding: 6px 10px; border-radius: 999px;
+      background: #f1f5f9;
+      border:1px solid var(--border);
+    }
+    .cardBody{ padding: 14px; }
+    label{
+      display:block; font-size: 12px; color: var(--muted); margin: 10px 0 6px;
+    }
+    input[type="text"], input[type="url"], input[type="email"], textarea{
+      width:100%;
+      border:1px solid var(--border);
+      background: #fafafa;
+      color: var(--text);
+      border-radius: 8px;
+      padding: 10px 11px;
+      outline:none;
+      font-size: 13px;
+      transition: border-color 0.2s;
+    }
+    input:focus, textarea:focus{
+      border-color: #8b5cf6;
+    }
+    input::placeholder, textarea::placeholder{ color: #94a3b8; }
+    textarea{ min-height: 90px; resize: vertical; }
+    .row{ display:flex; gap: 10px; }
+    .row > div{ flex:1; }
+
+    .checks{
+      display:grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin-top: 10px;
+    }
+    .checks label{
+      margin:0;
+      color: var(--text);
+      font-size: 12px;
+      display:flex; align-items:center; gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #fafafa;
+      border: 1px solid var(--border);
+    }
+    input[type="checkbox"]{ transform: translateY(1px); }
+
+    .hr{ height:1px; background: var(--border); margin: 14px 0; }
+
+    .btns{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 12px; }
+    button{
+      border:1px solid var(--border);
+      background: white;
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor:pointer;
+      font-size: 13px;
+      font-weight: 650;
+      transition: all 0.2s;
+    }
+    button:hover{
+      background: #fafafa;
+    }
+    button.primary{
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      border-color: transparent;
+      color: white;
+    }
+    button.primary:hover{
+      opacity: 0.9;
+    }
+    button.ghost{
+      background: transparent;
+      border-color: var(--border);
+      color: var(--muted);
+    }
+    button.ghost:hover{
+      background: #fafafa;
+    }
+    button:active{ transform: translateY(1px); }
+
+    .note{
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    /* Preview area */
+    .stageWrap{ display:flex; justify-content:center; }
+    .stage{
+      padding: 18px;
+      border-radius: 8px;
+      border: 2px dashed #e2e8f0;
+      background: #ffffff;
+      max-width: 100%;
+      overflow:auto;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,.04);
+    }
+
+    /* Preview signature styling */
+    .sigPreview{ font-family: Arial, Helvetica, sans-serif; font-size:13px; line-height:1.35; color:#1f2937; }
+    .sigPreview .name{ font-size:14px; font-weight:700; color:#111827; }
+    .sigPreview .muted{ color:#6b7280; }
+    .sigPreview a{ color:#0b57d0; text-decoration:none; }
+    .htmlOut{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      min-height: 600px;
+    }
+
+    .tinyHelp{
+      font-size: 11px; color: #94a3b8;
+      margin-top: 6px;
+    }
+
+    .fileUpload{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .fileUpload input[type="file"]{
+      flex: 1;
+      padding: 8px;
+    }
+    .fileUpload button{
+      padding: 8px 12px;
+      white-space: nowrap;
+    }
+    .uploadError{
+      color: #ef4444;
+      font-size: 12px;
+      margin-top: 6px;
+      display: none;
+    }
+    .uploadError.show{
+      display: block;
+    }
+    .uploadSuccess{
+      color: #10b981;
+      font-size: 12px;
+      margin-top: 6px;
+      display: none;
+    }
+    .uploadSuccess.show{
+      display: block;
+    }
+
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Email envelope -->
+            <rect x="2" y="6" width="20" height="14" rx="2" stroke="white" stroke-width="1.5" fill="none" opacity="0.9"/>
+            <path d="M2 8L12 14L22 8" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/>
+            <!-- Signature pen -->
+            <path d="M14 16L16 14L18 16L16 18L14 16Z" fill="white" opacity="0.8"/>
+            <line x1="14" y1="16" x2="8" y2="16" stroke="white" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+          </svg>
+        </div>
+        <div class="titleBlock">
+          <h1>SigMail Studio 🚀</h1>
+          <p>The ultimate signature generator for disruptive email thought leadership</p>
+        </div>
+      </div>
+
+      <div class="langPills" role="tablist" aria-label="Language">
+        <button class="pill active" id="pillEN" type="button">EN</button>
+        <button class="pill" id="pillFR" type="button">FR</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- CONFIG -->
+      <div class="card">
+        <div class="cardHead">
+          <h2 id="hConfig">Configuration</h2>
+          <span class="badge" id="badge">Copy from preview into Gmail</span>
+        </div>
+        <div class="cardBody">
+          <label id="lImgUrl">Image URL (public HTTPS)</label>
+          <input id="imgUrl" type="url"
+                 value="" placeholder="https://cdn.unicorn.vc/my-professional-headshot-with-hoodie.png" />
+
+          <div class="fileUpload">
+            <input id="imgFile" type="file" accept="image/*" />
+            <button id="uploadBtn" type="button" class="ghost">Upload</button>
+          </div>
+          <div id="uploadError" class="uploadError"></div>
+          <div id="uploadSuccess" class="uploadSuccess"></div>
+          <div class="tinyHelp" id="uploadHelp">
+            Upload an image to convert to base64 (recommended for Gmail). Max 500KB. Accepted: JPG, PNG, GIF, SVG.
+          </div>
+
+          <div class="row">
+            <div>
+              <label id="lImgSize">Displayed size (px)</label>
+              <input id="imgSize" type="text" value="80" />
+            </div>
+            <div>
+              <label id="lImgRadius">Corner radius (px)</label>
+              <input id="imgRadius" type="text" value="6" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label id="lFirstName">First name</label>
+              <input id="firstName" type="text" value="" placeholder="Chad" />
+            </div>
+            <div>
+              <label id="lLastName">Last name</label>
+              <input id="lastName" type="text" value="" placeholder="Synergetic" />
+            </div>
+          </div>
+
+          <label id="lTitle">Title</label>
+          <input id="title" type="text" value="" placeholder="Chief Vibes Officer · Growth Hacking Ninja 🦄" />
+
+          <label id="lLocation">Location</label>
+          <input id="location" type="text" value="" placeholder="SF Bay Area (Remote-first, WFH Tuesdays)" />
+
+          <label id="lEmail">Email</label>
+          <input id="email" type="email" value="" placeholder="chad@hypergrowth.io" />
+
+          <label id="lPhone">Phone (plain text — no link)</label>
+          <input id="phone" type="text" value="" placeholder="+1 (415) DISRUPT (available during stand-ups)" />
+
+          <label id="lMotto">Motto / tagline</label>
+          <input id="motto" type="text" value="" placeholder="Disrupting the disruption. Let's synergize! 🚀" />
+
+          <div class="checks">
+            <label><input id="showTitle" type="checkbox" checked> <span id="cTitle">Title</span></label>
+            <label><input id="showLocation" type="checkbox" checked> <span id="cLocation">Location</span></label>
+            <label><input id="showEmail" type="checkbox" checked> <span id="cEmail">Email</span></label>
+            <label><input id="showPhone" type="checkbox" checked> <span id="cPhone">Phone</span></label>
+            <label><input id="showMotto" type="checkbox" checked> <span id="cMotto">Motto</span></label>
+          </div>
+
+          <div class="hr"></div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <h2 id="hLinks" style="margin:0;font-size:13px;">Links (one per line)</h2>
+            <span class="badge" id="linksBadge">Clickable ✅</span>
+          </div>
+
+          <div class="checks" style="margin-top:10px;">
+            <label><input id="showLink1" type="checkbox" checked> <span id="cLink1">Link 1</span></label>
+            <label><input id="showLink2" type="checkbox" checked> <span id="cLink2">Link 2</span></label>
+            <label><input id="showLink3" type="checkbox" checked> <span id="cLink3">Link 3</span></label>
+            <label><input id="openNewTab" type="checkbox" checked> <span id="cNewTab">Open in new tab</span></label>
+          </div>
+
+          <div class="row">
+            <div>
+              <label id="lLink1Text">Link 1 — text</label>
+              <input id="link1Text" type="text" value="" placeholder="LinkedIn (Thought Leadership™)" />
+            </div>
+            <div>
+              <label id="lLink1Url">Link 1 — URL</label>
+              <input id="link1Url" type="url" value="" placeholder="https://linkedin.com/in/i-post-10x-content" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label id="lLink2Text">Link 2 — text</label>
+              <input id="link2Text" type="text" value="" placeholder="My SaaS (pre-seed, hockey stick growth)" />
+            </div>
+            <div>
+              <label id="lLink2Url">Link 2 — URL</label>
+              <input id="link2Url" type="url" value="" placeholder="https://unicorn-factory.ai" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label id="lLink3Text">Link 3 — text</label>
+              <input id="link3Text" type="text" value="" placeholder="Calendly (let's align on synergies)" />
+            </div>
+            <div>
+              <label id="lLink3Url">Link 3 — URL</label>
+              <input id="link3Url" type="url" value="" placeholder="https://calendly.com/chad/pivot-brainstorm" />
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <label id="lCustomHtml">Custom HTML (optional)</label>
+          <textarea id="customHtml" placeholder="<div>Drop your revolutionary HTML here (we're pivoting to no-code soon)</div>"></textarea>
+          <div class="tinyHelp" id="customHelp">
+            If you paste HTML here, it will replace the right-side content (image stays on the left).
+          </div>
+
+          <div class="checks">
+            <label><input id="useCustomHtml" type="checkbox"> <span id="cUseCustom">Use custom HTML</span></label>
+          </div>
+
+          <div class="btns">
+            <button class="primary" id="copyTableHtml" type="button">Copy HTML table</button>
+            <button class="ghost" id="resetMocks" type="button">Fill with SaaS vibes 🦄</button>
+          </div>
+
+          <div class="note" id="note">
+            Pro tip: Open in Chrome → Copy from preview → Paste into Gmail → Instant credibility boost 📈
+          </div>
+        </div>
+      </div>
+
+      <!-- PREVIEW + OUTPUT -->
+      <div class="card">
+        <div class="cardHead">
+          <h2 id="hPreview">Preview (copy/paste into Gmail)</h2>
+          <span class="badge" id="previewBadge">Table-based layout</span>
+        </div>
+        <div class="cardBody">
+          <div class="stageWrap">
+            <div class="stage">
+              <div id="preview"></div>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <h2 id="hOutput" style="margin:0 0 8px; font-size:13px;">Generated HTML table</h2>
+          <textarea id="htmlOut" class="htmlOut" readonly></textarea>
+          <div class="tinyHelp" id="outputHelp">
+            Phone is plain text (not clickable). Links are one per line.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const els = Object.fromEntries([
+    'pillEN','pillFR',
+    'imgUrl','imgSize','imgRadius','imgFile','uploadBtn','uploadError','uploadSuccess',
+    'firstName','lastName','title','location','email','phone','motto',
+    'showTitle','showLocation','showEmail','showPhone','showMotto',
+    'showLink1','showLink2','showLink3','openNewTab',
+    'link1Text','link1Url','link2Text','link2Url','link3Text','link3Url',
+    'customHtml','useCustomHtml',
+    'preview','htmlOut','copyTableHtml','resetMocks',
+    // UI text nodes
+    'hConfig','badge','lImgUrl','lImgSize','lImgRadius','lFirstName','lLastName','lTitle','lLocation','lEmail','lPhone','lMotto',
+    'cTitle','cLocation','cEmail','cPhone','cMotto',
+    'hLinks','linksBadge','cLink1','cLink2','cLink3','cNewTab',
+    'lLink1Text','lLink1Url','lLink2Text','lLink2Url','lLink3Text','lLink3Url',
+    'lCustomHtml','customHelp','cUseCustom','note','uploadHelp',
+    'hPreview','previewBadge','hOutput','outputHelp'
+  ].map(id => [id, document.getElementById(id)]));
+
+  function esc(s) {
+    return (s ?? '')
+      .replaceAll('&','&amp;')
+      .replaceAll('<','&lt;')
+      .replaceAll('>','&gt;')
+      .replaceAll('"','&quot;');
+  }
+
+  function linkLine(showEl, textEl, urlEl) {
+    if (!showEl.checked) return '';
+    const t = (textEl.value ?? '').trim();
+    const u = (urlEl.value ?? '').trim();
+    if (!t || !u) return '';
+    const attrs = els.openNewTab.checked ? ` target="_blank" rel="noreferrer"` : '';
+    return `<div style="margin-top:2px;"><a href="${esc(u)}"${attrs} style="color:#0b57d0;text-decoration:none;">${esc(t)}</a></div>`;
+  }
+
+  function buildTableHtml() {
+    const imgUrl = els.imgUrl.value.trim();
+    const imgSize = parseInt(els.imgSize.value.trim(), 10) || 80;
+    const radius = parseInt(els.imgRadius.value.trim(), 10) || 6;
+
+    const name = `${els.firstName.value.trim()} ${els.lastName.value.trim()}`.trim() || 'Firstname Lastname';
+    const title = els.title.value.trim();
+    const location = els.location.value.trim();
+    const email = els.email.value.trim();
+    const phone = els.phone.value.trim();
+    const motto = els.motto.value.trim();
+
+    const imgTag = imgUrl
+      ? `<img src="${esc(imgUrl)}" width="${imgSize}" height="${imgSize}" alt="Personal crest" style="display:block;border:0;border-radius:${radius}px;outline:none;text-decoration:none;">`
+      : `<div style="width:${imgSize}px;height:${imgSize}px;border:1px solid #e5e7eb;border-radius:${radius}px;display:flex;align-items:center;justify-content:center;color:#6b7280;font-size:12px;">image</div>`;
+
+    const links =
+      linkLine(els.showLink1, els.link1Text, els.link1Url) +
+      linkLine(els.showLink2, els.link2Text, els.link2Url) +
+      linkLine(els.showLink3, els.link3Text, els.link3Url);
+
+    const rightSide = (els.useCustomHtml.checked && els.customHtml.value.trim())
+      ? els.customHtml.value.trim()
+      : `
+<div class="sigPreview">
+  <div class="name">${esc(name)}</div>
+  ${els.showTitle.checked && title ? `<div style="color:#374151;">${esc(title)}</div>` : ``}
+  ${els.showLocation.checked && location ? `<div class="muted">${esc(location)}</div>` : ``}
+  ${els.showEmail.checked && email ? `<div style="margin-top:6px;"><a href="mailto:${esc(email)}" style="color:#0b57d0;text-decoration:none;">${esc(email)}</a></div>` : ``}
+  ${els.showPhone.checked && phone ? `<div style="margin-top:2px;color:#374151;">${esc(phone)}</div>` : ``} <!-- phone NOT clickable -->
+  ${links ? `<div style="margin-top:6px;">${links}</div>` : ``}
+  ${els.showMotto.checked && motto ? `<div style="margin-top:6px;"><em>${esc(motto)}</em></div>` : ``}
+</div>`.trim();
+
+    return `
+<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.35;color:#1f2937;">
+  <tr>
+    <td style="padding-right:12px;vertical-align:middle;">
+      ${imgTag}
+    </td>
+    <td style="vertical-align:middle;">
+      ${rightSide}
+    </td>
+  </tr>
+</table>
+    `.trim();
+  }
+
+  function render() {
+    const html = buildTableHtml();
+    els.preview.innerHTML = html;
+    els.htmlOut.value = html;
+  }
+
+  function setLang(lang) {
+    const isFR = lang === 'fr';
+
+    els.pillFR.classList.toggle('active', isFR);
+    els.pillEN.classList.toggle('active', !isFR);
+
+    // Minimal i18n labels
+    const t = isFR ? {
+      hConfig: "Configuration",
+      badge: "Copie depuis l’aperçu vers Gmail",
+      lImgUrl: "URL de l’image (HTTPS public)",
+      lImgSize: "Taille affichée (px)",
+      lImgRadius: "Arrondi (px)",
+      lFirstName: "Prénom",
+      lLastName: "Nom",
+      lTitle: "Titre",
+      lLocation: "Localisation",
+      lEmail: "Email",
+      lPhone: "Téléphone (texte uniquement — pas de lien)",
+      lMotto: "Devise / tagline",
+      cTitle: "Titre",
+      cLocation: "Localisation",
+      cEmail: "Email",
+      cPhone: "Téléphone",
+      cMotto: "Devise",
+      hLinks: "Liens (un par ligne)",
+      linksBadge: "Cliquables ✅",
+      cLink1: "Lien 1",
+      cLink2: "Lien 2",
+      cLink3: "Lien 3",
+      cNewTab: "Nouvel onglet",
+      lLink1Text: "Lien 1 — texte",
+      lLink1Url: "Lien 1 — URL",
+      lLink2Text: "Lien 2 — texte",
+      lLink2Url: "Lien 2 — URL",
+      lLink3Text: "Lien 3 — texte",
+      lLink3Url: "Lien 3 — URL",
+      lCustomHtml: "HTML custom (optionnel)",
+      customHelp: "Si tu colles du HTML ici, ça remplace le contenu à droite (l'image reste à gauche).",
+      cUseCustom: "Utiliser le HTML custom",
+      uploadHelp: "Upload une image pour la convertir en base64 (recommandé pour Gmail). Max 500KB. Acceptés: JPG, PNG, GIF, SVG.",
+      note: "Pro tip : Ouvre dans Chrome → Copie depuis l'aperçu → Colle dans Gmail → Crédibilité instant +100 📈",
+      hPreview: "Aperçu (copie/colle dans Gmail)",
+      previewBadge: "Mise en page via tableau",
+      hOutput: "Tableau HTML généré",
+      outputHelp: "Le téléphone est du texte brut (non cliquable). Les liens sont un par ligne.",
+    } : {
+      hConfig: "Configuration",
+      badge: "Copy from preview into Gmail",
+      lImgUrl: "Image URL (public HTTPS)",
+      lImgSize: "Displayed size (px)",
+      lImgRadius: "Corner radius (px)",
+      lFirstName: "First name",
+      lLastName: "Last name",
+      lTitle: "Title",
+      lLocation: "Location",
+      lEmail: "Email",
+      lPhone: "Phone (plain text — no link)",
+      lMotto: "Motto / tagline",
+      cTitle: "Title",
+      cLocation: "Location",
+      cEmail: "Email",
+      cPhone: "Phone",
+      cMotto: "Motto",
+      hLinks: "Links (one per line)",
+      linksBadge: "Clickable ✅",
+      cLink1: "Link 1",
+      cLink2: "Link 2",
+      cLink3: "Link 3",
+      cNewTab: "Open in new tab",
+      lLink1Text: "Link 1 — text",
+      lLink1Url: "Link 1 — URL",
+      lLink2Text: "Link 2 — text",
+      lLink2Url: "Link 2 — URL",
+      lLink3Text: "Link 3 — text",
+      lLink3Url: "Link 3 — URL",
+      lCustomHtml: "Custom HTML (optional)",
+      customHelp: "If you paste HTML here, it replaces the right-side content (image stays left).",
+      cUseCustom: "Use custom HTML",
+      uploadHelp: "Upload an image to convert to base64 (recommended for Gmail). Max 500KB. Accepted: JPG, PNG, GIF, SVG.",
+      note: "Pro tip: Open in Chrome → Copy from preview → Paste into Gmail → Instant credibility boost 📈",
+      hPreview: "Preview (copy/paste into Gmail)",
+      previewBadge: "Table-based layout",
+      hOutput: "Generated HTML table",
+      outputHelp: "Phone is plain text (not clickable). Links are one per line.",
+    };
+
+    for (const [k,v] of Object.entries(t)) {
+      if (els[k]) els[k].textContent = v;
+    }
+
+    // Also tweak the placeholder in customHtml to match language
+    els.customHtml.placeholder = isFR
+      ? "<div>Balance ton HTML révolutionnaire ici (on pivot vers le no-code bientôt)</div>"
+      : "<div>Drop your revolutionary HTML here (we're pivoting to no-code soon)</div>";
+
+    // Update other placeholders based on language
+    els.imgUrl.placeholder = isFR
+      ? "https://cdn.licorne.vc/ma-photo-pro-en-hoodie.png"
+      : "https://cdn.unicorn.vc/my-professional-headshot-with-hoodie.png";
+
+    els.firstName.placeholder = isFR ? "Jean-Kévin" : "Chad";
+    els.lastName.placeholder = isFR ? "Synergétique" : "Synergetic";
+    els.title.placeholder = isFR
+      ? "Chief Vibes Officer · Ninja du Growth Hacking 🦄"
+      : "Chief Vibes Officer · Growth Hacking Ninja 🦄";
+    els.location.placeholder = isFR
+      ? "Paris Station F (Remote-first, présentiel le mardi)"
+      : "SF Bay Area (Remote-first, WFH Tuesdays)";
+    els.email.placeholder = isFR ? "jk@hypercroissance.fr" : "chad@hypergrowth.io";
+    els.phone.placeholder = isFR
+      ? "+33 6 DISRUPT (dispo pendant les stand-ups)"
+      : "+1 (415) DISRUPT (available during stand-ups)";
+    els.motto.placeholder = isFR
+      ? "Disrupter la disruption. Synergie power! 🚀"
+      : "Disrupting the disruption. Let's synergize! 🚀";
+
+    els.link1Text.placeholder = isFR ? "LinkedIn (Thought Leadership™)" : "LinkedIn (Thought Leadership™)";
+    els.link1Url.placeholder = isFR
+      ? "https://linkedin.com/in/je-poste-du-10x-content"
+      : "https://linkedin.com/in/i-post-10x-content";
+    els.link2Text.placeholder = isFR
+      ? "Mon SaaS (pré-seed, courbe en crosse de hockey)"
+      : "My SaaS (pre-seed, hockey stick growth)";
+    els.link2Url.placeholder = isFR ? "https://usine-a-licornes.ai" : "https://unicorn-factory.ai";
+    els.link3Text.placeholder = isFR
+      ? "Calendly (alignons nos synergies)"
+      : "Calendly (let's align on synergies)";
+    els.link3Url.placeholder = isFR
+      ? "https://calendly.com/jk/brainstorm-pivot"
+      : "https://calendly.com/chad/pivot-brainstorm";
+  }
+
+  function resetMocks() {
+    els.firstName.value = "Chad";
+    els.lastName.value  = "Synergetic";
+    els.title.value     = "Chief Vibes Officer · Growth Hacking Ninja 🦄";
+    els.location.value  = "SF Bay Area (Remote-first, WFH Tuesdays)";
+    els.email.value     = "chad@hypergrowth.io";
+    els.phone.value     = "+1 (415) DISRUPT (available during stand-ups)";
+    els.motto.value     = "Disrupting the disruption. Let's synergize! 🚀";
+    els.link1Text.value = "LinkedIn (Thought Leadership™)";
+    els.link1Url.value  = "https://linkedin.com/in/i-post-10x-content";
+    els.link2Text.value = "My SaaS (pre-seed, hockey stick growth)";
+    els.link2Url.value  = "https://unicorn-factory.ai";
+    els.link3Text.value = "Calendly (let's align on synergies)";
+    els.link3Url.value  = "https://calendly.com/chad/pivot-brainstorm";
+    render();
+  }
+
+  function handleImageUpload() {
+    const file = els.imgFile.files[0];
+
+    // Hide previous messages
+    els.uploadError.classList.remove('show');
+    els.uploadSuccess.classList.remove('show');
+
+    if (!file) {
+      els.uploadError.textContent = (els.pillFR.classList.contains('active'))
+        ? 'Veuillez sélectionner un fichier.'
+        : 'Please select a file.';
+      els.uploadError.classList.add('show');
+      return;
+    }
+
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+    if (!validTypes.includes(file.type)) {
+      els.uploadError.textContent = (els.pillFR.classList.contains('active'))
+        ? 'Format invalide. Acceptés: JPG, PNG, GIF, SVG.'
+        : 'Invalid format. Accepted: JPG, PNG, GIF, SVG.';
+      els.uploadError.classList.add('show');
+      return;
+    }
+
+    // Validate file size (500KB max)
+    const maxSize = 500 * 1024; // 500KB
+    if (file.size > maxSize) {
+      els.uploadError.textContent = (els.pillFR.classList.contains('active'))
+        ? `Fichier trop volumineux (${(file.size / 1024).toFixed(0)}KB). Max: 500KB.`
+        : `File too large (${(file.size / 1024).toFixed(0)}KB). Max: 500KB.`;
+      els.uploadError.classList.add('show');
+      return;
+    }
+
+    // Convert to base64
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      els.imgUrl.value = e.target.result;
+      els.uploadSuccess.textContent = (els.pillFR.classList.contains('active'))
+        ? `✓ Image uploadée (${(file.size / 1024).toFixed(1)}KB)`
+        : `✓ Image uploaded (${(file.size / 1024).toFixed(1)}KB)`;
+      els.uploadSuccess.classList.add('show');
+      render();
+    };
+    reader.onerror = () => {
+      els.uploadError.textContent = (els.pillFR.classList.contains('active'))
+        ? 'Erreur lors de la lecture du fichier.'
+        : 'Error reading file.';
+      els.uploadError.classList.add('show');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Bind
+  document.querySelectorAll('input, textarea').forEach(el => {
+    el.addEventListener('input', render);
+    el.addEventListener('change', render);
+  });
+
+  els.copyTableHtml.addEventListener('click', async () => {
+    await navigator.clipboard.writeText(els.htmlOut.value);
+    const old = els.copyTableHtml.textContent;
+    els.copyTableHtml.textContent = (els.pillFR.classList.contains('active')) ? "HTML copié ✓" : "Copied ✓";
+    setTimeout(() => els.copyTableHtml.textContent = old, 900);
+  });
+
+  els.resetMocks.addEventListener('click', resetMocks);
+  els.uploadBtn.addEventListener('click', handleImageUpload);
+
+  els.pillEN.addEventListener('click', () => setLang('en'));
+  els.pillFR.addEventListener('click', () => setLang('fr'));
+
+  // init
+  setLang('en');
+  render();
+</script>
+</body>
+</html>
